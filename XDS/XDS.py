@@ -975,10 +975,10 @@ class XDS:
         "Runs the COLSPOT step."
         if XDS_INPUT:
             self.inpParam.mix(xdsInp2Param(inp_str=XDS_INPUT))
-        self.inpParam["JOB"] = "COLSPOT",
+        self.inpParam["JOB"] = "INIT COLSPOT",
         if SET_NTHREADS:
-            self.inpParam["MAXIMUM_NUM_PROCESSORS"] = 1
-            self.inpParam["MAXIMUM_NUMBER_OF_JOBS"] = NUM_PROCESSORS
+            self.inpParam["MAXIMUM_NUM_PROCESSORS"] = 0
+            self.inpParam["MAXIMUM_NUMBER_OF_JOBS"] = 50
         _trial = 0
 
         # DEFAULT=3.2 deg., SLOW=6.4 deg., FAST=1.6 deg.
@@ -1162,7 +1162,7 @@ class XDS:
         "Running the strategy."
         if SET_NTHREADS:
             self.inpParam["MAXIMUM_NUMBER_OF_PROCESSORS"] = NUM_PROCESSORS
-            self.inpParam["MAXIMUM_NUMBER_OF_JOBS"] = 1
+            self.inpParam["MAXIMUM_NUMBER_OF_JOBS"] = 50
 
         select_strategy(ridx, self.inpParam)
         prnt("\n Starting strategy calculation.")
@@ -1182,8 +1182,8 @@ class XDS:
         if XDS_INPUT:
             self.inpParam.mix(xdsInp2Param(inp_str=XDS_INPUT))
         if SET_NTHREADS:
-            self.inpParam["MAXIMUM_NUMBER_OF_PROCESSORS"] = NUM_PROCESSORS
-            self.inpParam["MAXIMUM_NUMBER_OF_JOBS"] = 1
+            self.inpParam["MAXIMUM_NUMBER_OF_PROCESSORS"] = 0
+            self.inpParam["MAXIMUM_NUMBER_OF_JOBS"] = 50
         if ("slow" in self.mode) or BRUTE:
             self.inpParam["NUMBER_OF_PROFILE_GRID_POINTS_ALONG_ALPHA_BETA"] = 13
             self.inpParam["NUMBER_OF_PROFILE_GRID_POINTS_ALONG_GAMMA"] = 13
@@ -1198,7 +1198,7 @@ class XDS:
             self.inpParam["DATA_RANGE_FIXED_SCALE_FACTOR"] = i1, i2, 1.
 
         if len(image_ranges) >= 1:
-            self.inpParam["JOB"] = "INTEGRATE",
+            self.inpParam["JOB"] = "DEFPIX INTEGRATE",
             self.run(rsave=True)
             res = XDSLogParser("INTEGRATE.LP", run_dir=self.run_dir, verbose=1)
             self.check_fileout("INTEGRATE.HKL")
@@ -1957,7 +1957,7 @@ if __name__ == "__main__":
     #while _DELPHI < _MIN_DELPHI:
     #    _DELPHI *= 2
     newrun.inpParam["DELPHI"] = _DELPHI
-    newrun.inpParam["MAXIMUM_NUMBER_OF_JOBS"] = 1
+    newrun.inpParam["MAXIMUM_NUMBER_OF_JOBS"] = 50
     if SLOW:
         newrun.inpParam["DELPHI"] *= 2
         newrun.mode.append("slow")
